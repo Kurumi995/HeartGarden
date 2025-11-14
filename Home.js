@@ -123,6 +123,24 @@ export default function Home({ navigation, route }) {
   const [moodListWidth, setMoodListWidth] = useState(0);
   const moodListRef = useRef(null);
 
+  // 根据心情返回对应的 GIF
+  const getAegisImage = () => {
+    // 如果是 mood-select, task-select 或 final-message 阶段，显示 default.gif
+    if (step === 'mood-select' || step === 'task-select' || step === 'final-message') {
+      return require('./assets/default.gif');
+    }
+    
+    // 根据选择的心情返回对应的 GIF（mood-write 阶段）
+    if (selectedMood === 'great' || selectedMood === 'good') {
+      return require('./assets/happy.gif');
+    } else if (selectedMood === 'okay' || selectedMood === 'meh' || selectedMood === 'bad') {
+      return require('./assets/sad.gif');
+    }
+    
+    // 默认返回 default.gif
+    return require('./assets/default.gif');
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
@@ -350,7 +368,7 @@ export default function Home({ navigation, route }) {
               <Text style={styles.messageText}>{currentMessage || "今天心情怎么样？"}</Text>
             </View>
             <Image 
-              source={require('./assets/Aegis.png')} 
+              source={getAegisImage()} 
               style={styles.aegisAvatar}
               resizeMode="contain"
             />
@@ -450,7 +468,7 @@ export default function Home({ navigation, route }) {
                 <Text style={styles.messageText}>{currentMessage || "可以写下心情"}</Text>
               </View>
               <Image 
-                source={require('./assets/Aegis.png')} 
+                source={getAegisImage()} 
                 style={styles.aegisAvatar}
                 resizeMode="contain"
               />
@@ -493,7 +511,7 @@ export default function Home({ navigation, route }) {
               <Text style={styles.messageText}>{currentMessage || "选择想要的task"}</Text>
             </View>
             <Image 
-              source={require('./assets/Aegis.png')} 
+              source={getAegisImage()} 
               style={styles.aegisAvatar}
               resizeMode="contain"
             />
@@ -542,7 +560,7 @@ export default function Home({ navigation, route }) {
               <Text style={styles.messageText}>{currentMessage}</Text>
             </View>
             <Image 
-              source={require('./assets/Aegis.png')} 
+              source={getAegisImage()} 
               style={styles.aegisAvatar}
               resizeMode="contain"
             />

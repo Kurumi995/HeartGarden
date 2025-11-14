@@ -9,7 +9,6 @@ const TASK_DATA = {
     { id: '1', title: 'Do 10 minutes of yoga', completed: false },
     { id: '2', title: 'Walk for 30 minutes', completed: false },
     { id: '3', title: 'Jump rope for 5 minutes', completed: false },
-    { id: '4', title: 'Do 20 squats', completed: false },
   ],
   'emotion': [
     { id: '1', title: 'Write down 3 things you\'re grateful for', completed: false },
@@ -41,10 +40,11 @@ export default function Task({ route, navigation }) {
   const { taskType } = route.params || { taskType: 'exercise' };
   const [tasks, setTasks] = useState(TASK_DATA[taskType] || TASK_DATA['exercise']);
 
-  const toggleTask = (taskId) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    ));
+  const handleTaskPress = (task) => {
+    // 只有 exercise 类型跳转到任务界面
+    if (taskType === 'exercise') {
+      navigation.navigate('ExerciseTask', { task });
+    }
   };
 
   const getTaskTypeLabel = (type) => {
@@ -78,23 +78,17 @@ export default function Task({ route, navigation }) {
         contentContainerStyle={styles.listContainer}
         renderItem={({ item }) => (
           <TouchableOpacity 
-            style={[
-              styles.taskItem,
-              item.completed && styles.taskItemCompleted
-            ]}
-            onPress={() => toggleTask(item.id)}
+            style={styles.taskItem}
+            onPress={() => handleTaskPress(item)}
           >
-            <MaterialIcons 
-              name={item.completed ? 'check-box' : 'check-box-outline-blank'} 
-              size={28} 
-              color={item.completed ? '#4CAF50' : '#999'} 
-            />
-            <Text style={[
-              styles.taskText,
-              item.completed && styles.taskTextCompleted
-            ]}>
+            <Text style={styles.taskText}>
               {item.title}
             </Text>
+            <MaterialIcons 
+              name="chevron-right" 
+              size={28} 
+              color="#FF69B4" 
+            />
           </TouchableOpacity>
         )}
       />
@@ -129,24 +123,16 @@ const styles = StyleSheet.create({
   taskItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 15,
     marginBottom: 15,
   },
-  taskItemCompleted: {
-    backgroundColor: '#f0f8f0',
-    borderColor: '#4CAF50',
-  },
   taskText: {
-    marginLeft: 15,
     fontSize: 16,
     color: '#333',
     flex: 1,
-  },
-  taskTextCompleted: {
-    color: '#999',
-    textDecorationLine: 'line-through',
   },
 });
 
